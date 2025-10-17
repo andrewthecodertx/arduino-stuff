@@ -9,15 +9,15 @@ void setup() {
   Serial.println();
   Serial.println("==== EEPROM HEX & ASCII ====");
 
-  for (int addr = 0; addr < length; addr += bytesPerLine) {
+  for (int base = 0; base < length; base += bytesPerLine) {
     byte data[bytesPerLine];
     for (int offset = 0; offset < length; offset += 1) {
-      data[offset] = EEPROM.read(addr + offset);
+      data[offset] = EEPROM.read(base + offset);
     }
 
     // ADDRESS
     char address[8];
-    sprintf(address, "%03x  ", addr);
+    sprintf(address, "%03x  ", base);
     Serial.print(address);
 
     // HEX
