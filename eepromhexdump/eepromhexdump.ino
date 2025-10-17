@@ -10,6 +10,16 @@ void setup() {
   Serial.println("==== EEPROM HEX & ASCII ====");
 
   for (int base = 0; base < length; base += bytesPerLine) {
+    if(base > 0 && base % 256 == 0) {
+      Serial.println("Press ENTER to continue...");
+      while(!Serial.available()) {
+        ;
+      }
+      while(Serial.available()) {
+        Serial.read();
+      }
+    }
+
     byte data[bytesPerLine];
     for (int offset = 0; offset < length; offset += 1) {
       data[offset] = EEPROM.read(base + offset);
