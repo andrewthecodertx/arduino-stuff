@@ -15,10 +15,12 @@ void setup() {
       data[offset] = EEPROM.read(addr + offset);
     }
 
+    // ADDRESS
     char address[8];
     sprintf(address, "%03x  ", addr);
     Serial.print(address);
 
+    // HEX
     char line[80];
     for(int currentByte = 0; currentByte < bytesPerLine; currentByte++) {
       sprintf(line, "%02x ", data[currentByte]);
@@ -26,6 +28,7 @@ void setup() {
       Serial.print(line);
     }
 
+    // ACSII
     Serial.print(" |");
     for(int currentByte = 0; currentByte < bytesPerLine; currentByte++) {
       char c = data[currentByte];
@@ -42,4 +45,3 @@ void setup() {
 void loop() {
   // Nothing here
 }
-
