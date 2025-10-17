@@ -6,41 +6,33 @@ const int length = EEPROM.length();
 void setup() {
   Serial.begin(115200);
 
-  Serial.println("===READING EEPROM===");
+  Serial.println();
+  Serial.println("==== EEPROM HEX & ASCII ====");
 
-  for(int address = 0; address < length; address += bytesPerLine) {
-    if(address > 0 && address % 256 == 0) {
-      Serial.println("Press ENTER to continue...");
-      while(!Serial.available()) {
-        ;
-      }
-      while(Serial.available()) {
-        Serial.read();
-      }
+  for (int addr = 0; addr < length; addr += bytesPerLine) {
+    byte data[bytesPerLine];
+    for (int offset = 0; offset < length; offset += 1) {
+      data[offset] = EEPROM.read(addr + offset);
     }
 
-    if(address < 0x10) Serial.print("00");
-    else if(address < 0x100) Serial.print("0");
-    Serial.print(address, HEX);
-    Serial.print("  ");
+    char address[8];
+    sprintf(address, "%03x  ", addr);
+    Serial.print(address);
 
+    char line[80];
     for(int currentByte = 0; currentByte < bytesPerLine; currentByte++) {
-      if(address + currentByte < length) {
-        byte value = EEPROM.read(address + currentByte);
-        if(value < 0x10) Serial.print("0");
-        Serial.print(value, HEX);
-        Serial.print(" ");
-      } else {
-        Serial.print(" ");
-      }
+      sprintf(line, "%02x ", data[currentByte]);
+      if(currentByte == 7) sprintf(line, " ");
+      Serial.print(line);
     }
-    Serial.print("  ");
 
-    Serial.print("|");
-    for(int currentChar = 0; currentChar < bytesPerLine; currentChar++) {
-      if(address + currentChar < length) {
-        byte value = EEPROM.read(address + currentChar);
-        Serial.print(isPrintable(value) ? (char)value : '.');
+    Serial.print(" |");
+    for(int currentByte = 0; currentByte < bytesPerLine; currentByte++) {
+      char c = data[currentByte];
+      if(c >= 32 && c <=126) {
+        Serial.print(c);
+      } else {
+        Serial.print('.');
       }
     }
     Serial.println("|");
@@ -48,5 +40,6 @@ void setup() {
 }
 
 void loop() {
-  // nothing to see here!
+  // Nothing here
 }
+
